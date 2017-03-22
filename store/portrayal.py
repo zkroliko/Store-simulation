@@ -8,11 +8,13 @@ def portrayCell(cell):
     assert cell is not None
     return {
         "Shape": "rect",
+        "text": "c",
         "w": 1,
         "h": 1,
-        "Filled": "true",
+        "Filled": "false",
         "Layer": 0,
         "x": cell.x,
         "y": cell.y,
-        "Color": "red" if cell.isAlive else "white"
+        "Color": "white",
+        "text_color": "red"
     }
