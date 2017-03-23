@@ -4,11 +4,11 @@ from mesa import Model
 from mesa.time import SimultaneousActivation
 from mesa.space import Grid
 
-from store.cell import Cell
+from store.shelf import Shelf
+from store.client import Client
 
 
 class Shop(Model):
-
     def __init__(self, height, width):
 
         # Set up the grid and schedule.
@@ -26,14 +26,30 @@ class Shop(Model):
 
         # Place a cell at each location, with some initialized to
         # ALIVE and some to DEAD.
-		
-        for i in range(0,50):
-            x = random.randrange(width)
-            y = random.randrange(height)
-            cell = Cell((x, y), self)
-            self.grid.place_agent(cell, (x, y))
+
+        for i in range(0, 20):
+            cell = Shelf((5, i + 5), self)
+            self.grid.place_agent(cell, (5, i + 5))
             self.schedule.add(cell)
-		 
+
+        for i in range(0, 20):
+            cell = Shelf((15, i + 5), self)
+            self.grid.place_agent(cell, (15, i + 5))
+            self.schedule.add(cell)
+
+        for i in range(0, 20):
+            cell = Shelf((25, i + 5), self)
+            self.grid.place_agent(cell, (25, i + 5))
+            self.schedule.add(cell)
+
+        for i in range(0, 50):
+            x = random.randrange(width)
+            y = random.randrange(int(height / 5)) - int(height / 5)
+            cell = Client((x, y), self)
+            if (self.grid.is_cell_empty((x, y))):
+                self.grid.place_agent(cell, (x, y))
+            self.schedule.add(cell)
+
         self.running = True
 
     def step(self):

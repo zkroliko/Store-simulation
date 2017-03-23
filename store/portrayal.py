@@ -6,15 +6,4 @@ def portrayCell(cell):
     :return: the portrayal dictionary.
     '''
     assert cell is not None
-    return {
-        "Shape": "rect",
-        "text": "c",
-        "w": 1,
-        "h": 1,
-        "Filled": "false",
-        "Layer": 0,
-        "x": cell.x,
-        "y": cell.y,
-        "Color": "white",
-        "text_color": "red"
-    }
+    return cell.display
