@@ -37,5 +37,7 @@ class Client(Agent):
         self.x, self.y = (x, y)
         self.model.grid.move_agent(self, (self.x , self.y))
 
-    def remove(self):
+    def check_out(self):
+        print("Agent removed")
+        self.model.grid.remove_agent(self)
         self.model.schedule.remove(self)

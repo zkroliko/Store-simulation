@@ -4,6 +4,7 @@ from mesa import Model
 from mesa.time import SimultaneousActivation
 from mesa.space import Grid
 
+from store.exit import Exit
 from store.shelf import Shelf
 from store.client import Client
 
@@ -24,8 +25,12 @@ class Shop(Model):
         self.width = width
         self.grid = Grid(height, width, torus=True)
 
-        # Place a cell at each location, with some initialized to
-        # ALIVE and some to DEAD.
+
+        for i in range(1, height-1):
+            cell = Exit((i,0), self)
+            print((i,height))
+            self.grid.place_agent(cell, (i,0))
+            self.schedule.add(cell)
 
         for i in range(0, 20):
             cell = Shelf((5, i + 5), self)
