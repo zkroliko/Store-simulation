@@ -8,16 +8,16 @@ class Exit(Agent):
         self.x, self.y = pos
         self.pos = pos
         self.display = {
-        "Shape": "rect",
-        "w": 1,
-        "h": 1,
-        "Filled": "true",
-        "Layer": 0,
-        "x": self.x,
-        "y": self.y,
-        "Color": "purple",
-        "text_color": "red"
-    }
+            "Shape": "rect",
+            "w": 1,
+            "h": 1,
+            "Filled": "true",
+            "Layer": 0,
+            "x": self.x,
+            "y": self.y,
+            "Color": "purple",
+            "text_color": "red"
+        }
 
     @property
     def neighbors(self):
@@ -25,10 +25,8 @@ class Exit(Agent):
 
     def step(self):
         for n in self.neighbors:
-            print(np.linalg.norm(np.array(self.pos)-np.array(n.pos)))
-            if np.linalg.norm(np.array(self.pos)-np.array(n.pos)) < 2 and hasattr(n,"check_out"):
+            if hasattr(n, "check_out"):
                 n.check_out()
 
     def advance(self):
         pass
-

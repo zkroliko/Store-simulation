@@ -1,6 +1,8 @@
 from mesa import Agent
 import random
 
+from store import utils
+
 
 class Client(Agent):
     def __init__(self, pos, model):
@@ -8,17 +10,17 @@ class Client(Agent):
         self.x, self.y = pos
         self.pos = pos
         self.display = {
-        "Shape": "rect",
-        "text": "c",
-        "w": 1,
-        "h": 1,
-        "Filled": "false",
-        "Layer": 0,
-        "x": self.x,
-        "y": self.y,
-        "Color": "white",
-        "text_color": "red"
-    }
+            "Shape": "rect",
+            "text": "c",
+            "w": 1,
+            "h": 1,
+            "Filled": "false",
+            "Layer": 0,
+            "x": self.x,
+            "y": self.y,
+            "Color": "white",
+            "text_color": "red"
+        }
 
     @property
     def neighbors(self):
@@ -29,15 +31,19 @@ class Client(Agent):
         self.advance()
 
     def advance(self):
-        x = (self.x + random.randint(-1, 1)) % self.model.width
-        y = (self.y + random.randint(-1, 1)) % self.model.height
-        while not self.model.grid.is_cell_empty((x, y)):
-            x = (self.x + random.randint(-1, 1)) % self.model.width
-            y = (self.y + random.randint(-1, 1)) % self.model.height
-        self.x, self.y = (x, y)
-        self.model.grid.move_agent(self, (self.x , self.y))
+        positions = [pos for pos in self._possible_moves() if self.model.grid.is_cell_empty(pos)] + [self.pos]
+        next_pos = random.choice(positions)
+        if next_pos is not self.pos:
+            print("Client moving to {} from {}".format(next_pos, self.pos))
+            self.model.grid.move_agent(self, next_pos)
+            self.x, self.y = self.pos
+        # else:
+            # print("Client is standing at {}".format(self.pos))
+
+    def _possible_moves(self):
+        return utils.places_to_move(self.x, self.y, self.model.width, self.model.height)
 
     def check_out(self):
         print("Agent removed")
-        self.model.grid.remove_agent(self)
         self.model.schedule.remove(self)
+        self.model.grid.remove_agent(self)
