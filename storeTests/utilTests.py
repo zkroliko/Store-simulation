@@ -7,6 +7,8 @@ class TestPlacesToBe(unittest.TestCase):
     def test_simple(self):
         self.assertEqual(set(utils.places_to_be(5, 5, 10, 10)),
                          {(5, 5), (4, 4), (4, 5), (5, 4), (6, 6), (6, 5), (5, 6), (4, 6), (6, 4)})
+        self.assertEqual(set(utils.places_to_be(21, 23, 30, 30)),
+                         {(22, 23), (20, 22), (22, 24), (20, 23), (20, 24), (21, 22), (22, 22), (21, 24), (21, 23)})
 
     def test_edge(self):
         self.assertEqual(set(utils.places_to_be(5, 5, 6, 10)),
