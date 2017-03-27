@@ -2,11 +2,13 @@ from mesa import Agent
 import random
 
 from store import utils
+from store.decisionEngine import DecisionEngine
 
 
 class Client(Agent):
     def __init__(self, pos, model):
         super().__init__(pos, model)
+        self.mind = DecisionEngine(model)
         self.x, self.y = pos
         self.pos = pos
         self.display = {
@@ -31,8 +33,9 @@ class Client(Agent):
         self.advance()
 
     def advance(self):
-        positions = [pos for pos in self._possible_moves() if self.model.grid.is_cell_empty(pos)] + [self.pos]
-        next_pos = random.choice(positions)
+        moves = [pos for pos in self._possible_moves() if self.model.grid.is_cell_empty(pos)] + [self.pos]
+        next_pos = self.mind.make_decision(self.pos, moves)
+        assert(next_pos in moves)
         if next_pos is not self.pos:
             print("Client moving to {} from {}".format(next_pos, self.pos))
             self.model.grid.move_agent(self, next_pos)

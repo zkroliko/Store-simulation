@@ -1,15 +1,8 @@
-import random
-
 from mesa import Model
-from mesa.time import SimultaneousActivation
 from mesa.space import Grid
+from mesa.time import SimultaneousActivation
 
-from store.entrance import Entrance
-from store.exit import Exit
 from store.loader import Loader
-from store.shelf import Shelf
-from store.client import Client
-
 
 class Shop(Model):
     def __init__(self, height, width):
