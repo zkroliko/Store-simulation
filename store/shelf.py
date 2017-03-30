@@ -3,18 +3,21 @@ import random
 
 
 class Shelf(Agent):
-    def __init__(self, pos, model):
+    def __init__(self, pos, category, model):
         super().__init__(pos, model)
         self.x, self.y = pos
+        self.category = category
         self.display = {
             "Shape": "rect",
+            "text": self.category,
             "w": 1,
             "h": 1,
-            "Filled": "true",
+            "Filled": "false",
             "Layer": 0,
             "x": self.x,
             "y": self.y,
             "Color": "black",
+            "text_color": "white"
         }
 
     @property

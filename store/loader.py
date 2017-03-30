@@ -31,7 +31,7 @@ class Loader:
 
     def _load_shelves(self, list):
         for s in list:
-            exit = Shelf((s["x"],s["y"]), self.model)
+            exit = Shelf((s["x"],s["y"]), s["category"], self.model)
             self.model.grid.place_agent(exit, (s["x"],s["y"]))
             self.model.schedule.add(exit)
 
