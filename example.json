@@ -1,7 +1,7 @@
 {
   "width": 50,
   "height": 50,
-  "categories": ["a","b","c","d","e","f"],
+  "categories": ["n","p","s","c","k","h"],
   "entrances": [
     {"x": 16, "y": 29, "speed": 1},
     {"x": 15, "y": 29, "speed": 1},

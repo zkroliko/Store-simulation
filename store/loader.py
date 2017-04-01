@@ -17,6 +17,10 @@ class Loader:
             self._load_exits(data["exits"])
             self._load_shelves(data["shelves"])
 
+    def get_categories(self):
+        with open(self.path) as file:
+            return json.load(file)["categories"]
+
     def _load_entrances(self, list):
         for e in list:
             entrance = Entrance((e["x"],e["y"]), self.model)

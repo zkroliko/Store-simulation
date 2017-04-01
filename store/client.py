@@ -1,3 +1,5 @@
+from collections import Counter
+
 from mesa import Agent
 import random
 
@@ -6,14 +8,17 @@ from store.decisionEngine import DecisionEngine
 
 
 class Client(Agent):
-    def __init__(self, pos, model):
+
+    def __init__(self, pos, items_to_get, model):
         super().__init__(pos, model)
         self.mind = DecisionEngine(model)
         self.x, self.y = pos
         self.pos = pos
+        self.need = items_to_get
+        self.have = Counter()
         self.display = {
             "Shape": "rect",
-            "text": "c",
+            "text": str(len(self.need)),
             "w": 1,
             "h": 1,
             "Filled": "false",

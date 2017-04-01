@@ -21,6 +21,7 @@ class Shop(Model):
 
         loader = Loader(self,"example.json")
         loader.load_from_json()
+        self.categories = loader.get_categories()
 
         self.running = True
 
