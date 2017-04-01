@@ -6,4 +6,4 @@ def portrayCell(cell):
     :return: the portrayal dictionary.
     '''
     assert cell is not None
-    return cell.display
+    return cell.display()

@@ -7,7 +7,9 @@ class Shelf(Agent):
         super().__init__(pos, model)
         self.x, self.y = pos
         self.category = category
-        self.display = {
+
+    def display(self):
+        return {
             "Shape": "rect",
             "text": self.category,
             "w": 1,
@@ -19,7 +21,6 @@ class Shelf(Agent):
             "Color": "black",
             "text_color": "white"
         }
-
     @property
     def neighbors(self):
         return self.model.grid.neighbor_iter((self.x, self.y), True)
@@ -29,3 +30,4 @@ class Shelf(Agent):
 
     def advance(self):
         pass
+

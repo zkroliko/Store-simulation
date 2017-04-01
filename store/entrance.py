@@ -18,7 +18,9 @@ class Entrance(Agent):
         super().__init__(pos, model)
         self.x, self.y = pos
         self.pos = pos
-        self.display = {
+
+    def display(self):
+        return {
             "Shape": "rect",
             "w": 1,
             "h": 1,
