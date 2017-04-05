@@ -4,6 +4,7 @@ from mesa import Agent
 import random
 
 from store import utils
+from store.PickAction import PickAction
 from store.decisionEngine import DecisionEngine
 
 
@@ -18,7 +19,7 @@ class Client(Agent):
         self.pos = pos
         self.need = items_to_get
         self.have = Counter()
-        self.picking = (None, 0)
+        self.action = None
 
     def display(self):
         return {
@@ -30,16 +31,13 @@ class Client(Agent):
             "Layer": 0,
             "x": self.x,
             "y": self.y,
-            "Color": "white" if not self.picking_items() else "yellow",
+            "Color": "white" if not self.action else "yellow",
             "text_color": "red"
         }
 
     @property
     def neighbors(self):
         return self.model.grid.neighbor_iter((self.x, self.y), True)
-
-    def picking_items(self):
-        return self.picking[0] is not None
 
     def done(self):
         for n in self.need.most_common():
@@ -57,14 +55,8 @@ class Client(Agent):
         self.advance()
 
     def advance(self):
-        if self.picking_items():
-            if self.picking[1] > 0:
-                self.picking = (self.picking[0], self.picking[1] - 1)
-            else:
-                print("Client picked up an item of category {}".format(self.picking[0]))
-                self.need[self.picking[0]] -= 1
-                self.have[self.picking[0]] += 1
-                self.picking = (None, 0)
+        if self.action:
+            self.action.step()
         elif not self.using_shelves():
             moves = [pos for pos in self._possible_moves() if self.model.grid.is_cell_empty(pos)] + [self.pos]
             next_pos = self.mind.make_decision(self.pos, moves)
@@ -80,7 +72,7 @@ class Client(Agent):
         for n in self.neighbors:
             if hasattr(n, "category") and n.category in self.need and self.need[n.category] > 0:
                 print("Client started picking an item of category {}".format(n.category))
-                self.picking = (n.category, random.randrange(self.MIN_PICK_LENGTH, self.MAX_PICK_LENGTH))
+                self.action = PickAction(self, n)
                 return True
         return False
 
