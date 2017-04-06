@@ -4,7 +4,8 @@ from mesa import Agent
 import random
 
 from store import utils
-from store.PickAction import PickAction
+from store.exitAction import ExitAction
+from store.pickAction import PickAction
 from store.decisionEngine import DecisionEngine
 
 
@@ -57,7 +58,7 @@ class Client(Agent):
     def advance(self):
         if self.action:
             self.action.step()
-        elif not self.using_shelves():
+        elif not self.using_shelves() and not self.using_exits():
             moves = [pos for pos in self._possible_moves() if self.model.grid.is_cell_empty(pos)] + [self.pos]
             next_pos = self.mind.make_decision(self.pos, moves)
             assert (next_pos in moves)
@@ -69,18 +70,21 @@ class Client(Agent):
                 # print("Client is standing at {}".format(self.pos))
 
     def using_shelves(self):
-        for n in self.neighbors:
-            if hasattr(n, "category") and n.category in self.need and self.need[n.category] > 0:
-                print("Client started picking an item of category {}".format(n.category))
-                self.action = PickAction(self, n)
-                return True
+        if not self.done() and not self.action:
+            for n in self.neighbors:
+                if hasattr(n, "category") and n.category in self.need and self.need[n.category] > 0:
+                    self.action = PickAction(self, n)
+                    return True
+        return False
+
+    def using_exits(self):
+        if self.done() and not self.action:
+            for n in self.neighbors:
+                if hasattr(n, "check_out"):
+                    self.action = ExitAction(self,n)
+                    return True
         return False
 
     def _possible_moves(self):
         return utils.places_to_move(self.x, self.y, self.model.width, self.model.height)
 
-    def check_out(self):
-        if self.done():
-            print("Agent removed")
-            self.model.schedule.remove(self)
-            self.model.grid.remove_agent(self)

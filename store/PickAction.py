@@ -2,13 +2,14 @@ import random
 
 
 class PickAction:
-    MIN_PICK_LENGTH = 2
-    MAX_PICK_LENGTH = 8
+    MIN_LENGTH = 2
+    MAX_LENGTH = 8
 
     def __init__(self, client, shelf):
         self.client = client
         self.item = shelf.category
-        self.time_left = random.randrange(self.MIN_PICK_LENGTH, self.MAX_PICK_LENGTH)
+        self.time_left = random.randrange(self.MIN_LENGTH, self.MAX_LENGTH)
+        print("Client started picking an item of category {}".format(shelf.category))
 
     def ongoing(self):
         return self.time_left > 0
@@ -23,4 +24,4 @@ class PickAction:
         print("Client picked up an item of category {}".format(self.item))
         self.client.need[self.item] -= 1
         self.client.have[self.item] += 1
-        self.client.picking = None
+        self.client.action = None

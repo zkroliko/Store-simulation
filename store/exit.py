@@ -26,9 +26,10 @@ class Exit(Agent):
         return self.model.grid.neighbor_iter((self.x, self.y), True)
 
     def step(self):
-        for n in self.neighbors:
-            if hasattr(n, "check_out") and n.done():
-                n.check_out()
+        pass
 
     def advance(self):
+        pass
+
+    def check_out(self):
         pass
