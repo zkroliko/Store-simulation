@@ -15,7 +15,7 @@ class Client(Agent):
 
     def __init__(self, pos, items_to_get, model):
         super().__init__(pos, model)
-        self.mind = DecisionEngine(model)
+        self.mind = DecisionEngine(self)
         self.x, self.y = pos
         self.pos = pos
         self.need = items_to_get
@@ -39,6 +39,10 @@ class Client(Agent):
     @property
     def neighbors(self):
         return self.model.grid.neighbor_iter((self.x, self.y), True)
+
+    @property
+    def surround(self):
+        return self.model.grid.iter_neighbors((self.x, self.y), moore=True, radius=6)
 
     def done(self):
         for n in self.need.most_common():
@@ -81,10 +85,9 @@ class Client(Agent):
         if self.done() and not self.action:
             for n in self.neighbors:
                 if hasattr(n, "check_out"):
-                    self.action = ExitAction(self,n)
+                    self.action = ExitAction(self, n)
                     return True
         return False
 
     def _possible_moves(self):
         return utils.places_to_move(self.x, self.y, self.model.width, self.model.height)
-
