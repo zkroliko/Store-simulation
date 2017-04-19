@@ -12,7 +12,7 @@ class PerceptionDriver:
     }
 
     WEIGHTS_DONE = {
-        "shelf": -0.5,
+        "shelf": -0.1,
         "other_client": -0.1,
         "exit": 5,
         "entrance": -1

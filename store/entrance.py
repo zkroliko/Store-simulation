@@ -8,43 +8,46 @@ from store.client import Client
 
 
 class Entrance(Agent):
-
     PROBABILITY = 0.03
+
+    COUNT = 10
 
     MIN_ITEMS = 2
     MAX_ITEMS = 5
 
-    def __init__(self, pos,  model):
+    def __init__(self, pos, model):
         super().__init__(pos, model)
         self.x, self.y = pos
         self.pos = pos
+        self.count = self.COUNT
 
     def display(self):
         return {
             "Shape": "rect",
             "w": 1,
             "h": 1,
-            "Filled": "true",
+            "Filled": "false",
             "Layer": 0,
             "x": self.x,
             "y": self.y,
             "Color": "blue",
+            "text": self.count,
+            "text_color": "white"
         }
 
     def gen_item_list(self):
-        count = random.randrange(self.MIN_ITEMS,self.MAX_ITEMS)
+        count = random.randrange(self.MIN_ITEMS, self.MAX_ITEMS)
         items = Counter()
         for i in range(count):
             items[random.choice(self.model.categories)] += 1
         return items
-
 
     @property
     def neighbors(self):
         return self.model.grid.neighbor_iter((self.x, self.y), True)
 
     def step(self):
-        if random.random() < self.PROBABILITY:
+        if self.count > 0 and random.random() < self.PROBABILITY:
             self.create_client()
 
     def advance(self):
@@ -57,6 +60,7 @@ class Entrance(Agent):
             cell = Client(pos, self.gen_item_list(), self.model)
             self.model.grid.place_agent(cell, cell.pos)
             self.model.schedule.add(cell)
+            self.count -= 1
             print("Client entered at {}".format(pos))
         else:
             print("Entrance blocked at ({},{})".format(self.x, self.y))

@@ -1,12 +1,11 @@
 from collections import Counter
 
 from mesa import Agent
-import random
 
 from store import utils
+from store.decisionEngine import DecisionEngine
 from store.exitAction import ExitAction
 from store.pickAction import PickAction
-from store.decisionEngine import DecisionEngine
 
 
 class Client(Agent):
@@ -42,7 +41,7 @@ class Client(Agent):
 
     @property
     def surround(self):
-        return self.model.grid.iter_neighbors((self.x, self.y), moore=True, radius=8)
+        return self.model.grid.iter_neighbors((self.x, self.y), moore=True, radius=15)
 
     def done(self):
         for n in self.need.most_common():
@@ -91,3 +90,4 @@ class Client(Agent):
 
     def _possible_moves(self):
         return utils.places_to_move(self.x, self.y, self.model.width, self.model.height)
+
