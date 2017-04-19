@@ -11,10 +11,12 @@ class DecisionEngine:
         self.model = client.model
         self.client = client
         self.inertia = Inertia()
+        self.perception = PerceptionDriver(self.client)
+
 
     def make_decision(self, current, options):
-        force = PerceptionDriver(self.client)
-        weights = [0.2 + self.inertia.weight((current, option)) + force.weight((current, option)) for option in options]
+        self.perception.upate()
+        weights = [0.2 + self.inertia.weight((current, option)) + self.perception.weight((current, option)) for option in options]
         w_choices = zip(options, weights)
         choice = utils.weighted_choice(list(w_choices))
         next_move = (current, choice)

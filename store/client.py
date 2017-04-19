@@ -42,7 +42,7 @@ class Client(Agent):
 
     @property
     def surround(self):
-        return self.model.grid.iter_neighbors((self.x, self.y), moore=True, radius=6)
+        return self.model.grid.iter_neighbors((self.x, self.y), moore=True, radius=8)
 
     def done(self):
         for n in self.need.most_common():

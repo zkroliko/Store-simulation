@@ -9,7 +9,7 @@ from store.client import Client
 
 class Entrance(Agent):
 
-    PROBABILITY = 0.1
+    PROBABILITY = 0.03
 
     MIN_ITEMS = 2
     MAX_ITEMS = 5
