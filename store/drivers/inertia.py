@@ -1,5 +1,5 @@
 class Inertia:
-    GENERAL_COEFF = 1.0
+    GENERAL_COEFF = 1.7
     RETENTION = 0.9
 
     def __init__(self):
@@ -7,13 +7,14 @@ class Inertia:
         self.y = 0
 
     def weight(self, move):
-        vector = self._move_to_dir(move)
-        return max(0, (vector[0] * self.x + vector[1] * self.y) * self.GENERAL_COEFF)
+        vector = self._move_to_vec(move)
+        return max(0, (vector[0] * self.x + vector[1] * self.y))
 
     def update(self, move):
-        vector = self._move_to_dir(move)
-        self.x = self.RETENTION * self.x + vector[0]
-        self.y = self.RETENTION * self.y + vector[1]
+        vector = self._move_to_vec(move)
+        self.x = self.RETENTION * self.x + vector[0] * self.GENERAL_COEFF
+        self.y = self.RETENTION * self.y + vector[1] * self.GENERAL_COEFF
 
-    def _move_to_dir(self, move):
-        return move[1][0] - move[0][0], move[1][1] - move[0][1]
+    def _move_to_vec(self, move):
+        vec = move[1][0] - move[0][0], move[1][1] - move[0][1]
+        return vec

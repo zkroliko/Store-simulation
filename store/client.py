@@ -56,7 +56,7 @@ class Client(Agent):
         return total
 
     def step(self):
-        self.advance()
+        pass
 
     def advance(self):
         if self.action:
