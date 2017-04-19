@@ -15,8 +15,8 @@ class DecisionEngine:
 
 
     def make_decision(self, current, options):
-        self.perception.upate()
-        weights = [0.2 + self.inertia.weight((current, option)) + self.perception.weight((current, option)) for option in options]
+        self.perception.update()
+        weights = [self.inertia.weight((current, option)) + self.perception.weight((current, option)) for option in options]
         w_choices = zip(options, weights)
         choice = utils.weighted_choice(list(w_choices))
         next_move = (current, choice)

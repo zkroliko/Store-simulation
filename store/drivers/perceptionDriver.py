@@ -3,42 +3,46 @@ import numpy
 
 class PerceptionDriver:
     GENERAL_COEFF = 2.0
+    DIAG_COEFF = 0.709 # For diagonal vector normalization
 
     WEIGHTS_NORMAL = {
         "shelf": 1,
-        "other_client": -0.1,
+        "other_client": -0.05,
         "exit": -1,
         "entrance": -1
     }
 
     WEIGHTS_DONE = {
         "shelf": -0.1,
-        "other_client": -0.1,
+        "other_client": -0.05,
         "exit": 5,
         "entrance": -1
     }
 
     def __init__(self, client):
+        self.x = 0
+        self.y = 0
         self.client = client
 
-    def upate(self):
+    def update(self):
         self.x = 0
         self.y = 0
         for n in self.client.surround:
-            vector = self.build_vector_to(n)
-            norm = numpy.linalg.norm(numpy.asanyarray(vector))
-            norm_sq = norm * norm
             weight = 0
             if hasattr(n, "category"):
                 weight = self.assess_shelf(n)
-            if hasattr(n, "check_out"):
+            elif hasattr(n, "check_out"):
                 weight = self.assess_exit(n)
-            # if hasattr(n, "create_client"):
-            #     weight = self.assess_entrance(n)
-            # if hasattr(n, "done"):
-            #     weight = self.assess_client(n)
-            self.x += weight * vector[0] / norm_sq
-            self.y += weight * vector[1] / norm_sq
+            if hasattr(n, "create_client"):
+                weight = self.assess_entrance(n)
+            if hasattr(n, "done"):
+                weight = self.assess_client(n)
+            if weight != 0:
+                vector = self.build_vector_to(n)
+                norm = numpy.linalg.norm(numpy.asanyarray(vector))
+                norm_sq = norm * norm
+                self.x += weight * vector[0] / norm_sq
+                self.y += weight * vector[1] / norm_sq
         self.x *= self.GENERAL_COEFF
         self.y *= self.GENERAL_COEFF
 
@@ -61,6 +65,11 @@ class PerceptionDriver:
     def build_vector_to(self, n):
         return n.x - self.client.x, n.y - self.client.y
 
-    @staticmethod
-    def debased_vector(move):
-        return move[1][0] - move[0][0], move[1][1] - move[0][1]
+    def debased_vector(self, move):
+        # This is all on integers - only on move vectors
+        # Normalizing the move vector
+        vec = move[1][0] - move[0][0], move[1][1] - move[0][1]
+        if vec[0] == vec[1] != 0:
+            return vec[0]*self.DIAG_COEFF, vec[1]*self.DIAG_COEFF
+        else:
+            return vec

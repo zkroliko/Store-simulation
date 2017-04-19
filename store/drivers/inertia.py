@@ -1,5 +1,6 @@
 class Inertia:
-    GENERAL_COEFF = 1.7
+    GENERAL_COEFF = 4.0
+    DIAG_COEFF = 0.709 # This for diagonal vector normalization
     RETENTION = 0.9
 
     def __init__(self):
@@ -16,5 +17,9 @@ class Inertia:
         self.y = self.RETENTION * self.y + vector[1] * self.GENERAL_COEFF
 
     def _move_to_vec(self, move):
+        # Normalizing the move vector
         vec = move[1][0] - move[0][0], move[1][1] - move[0][1]
-        return vec
+        if vec[0] == vec[1] != 0:
+            return vec[0]*self.DIAG_COEFF, vec[1]*self.DIAG_COEFF
+        else:
+            return move[1][0] - move[0][0], move[1][1] - move[0][1]
