@@ -31,7 +31,7 @@ class Shop(Model):
         self.width = width
         self.grid = Grid(height, width, torus=False)
 
-        loader = Loader(self, "example.json")
+        loader = Loader(self, "shop2.json")
         loader.load_from_json()
         self.categories = loader.get_categories()
 
