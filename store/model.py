@@ -3,7 +3,7 @@ from mesa.datacollection import DataCollector
 from mesa.space import Grid
 from mesa.time import SimultaneousActivation
 
-from store.loader import Loader
+from store.builder import Builder
 
 
 def compute_gini(model):
@@ -18,7 +18,7 @@ def compute_gini(model):
 
 
 class Shop(Model):
-    def __init__(self, height, width):
+    def __init__(self, specification):
         # Set up the grid and schedule.
 
         # Use SimultaneousActivation which simulates all the cells
@@ -27,13 +27,11 @@ class Shop(Model):
         # state of all its neighbors -- before they've changed.
         self.schedule = SimultaneousActivation(self)
 
-        self.height = height
-        self.width = width
-        self.grid = Grid(height, width, torus=False)
-
-        loader = Loader(self, "shop2.json")
-        loader.load_from_json()
-        self.categories = loader.get_categories()
+        builder = Builder(specification)
+        self.height, self.width = builder.dims()
+        self.grid = Grid(self.height, self.width, torus=False)
+        self.categories = builder.get_categories()
+        builder.build(self)
 
         self.running = True
 

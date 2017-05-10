@@ -1,14 +1,22 @@
+import json
+
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 
+from store.builder import Builder
 from store.portrayal import portrayCell
 from store.model import Shop
 
-canvas_element = CanvasGrid(portrayCell, 30, 30, 500, 500)
+with open("shop2.json") as file:
+    specification = json.load(file)
+    builder = Builder(specification)
 
-chart = ChartModule([{"Label": "Gini",
-                      "Color": "Black"}],
-                    data_collector_name='datacollector')
+    canvas_element = CanvasGrid(portrayCell, builder.dims()[0], builder.dims()[1], 500, 500)
 
-server = ModularServer(Shop, [canvas_element,chart], "Shop",
-                       30, 30)
+    chart = ChartModule([{"Label": "Gini",
+                          "Color": "Black"}],
+                        data_collector_name='datacollector')
+
+    server = ModularServer(Shop, [canvas_element,chart], "Shop", specification)
+
+
