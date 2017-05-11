@@ -3,7 +3,7 @@ import random
 
 class ExitAction:
     MIN_LENGTH = 15
-    MAX_LENGTH = 20
+    MAX_LENGTH = 80
 
     def __init__(self, client, exit):
         self.client = client
