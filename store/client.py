@@ -20,6 +20,7 @@ class Client(Agent):
         self.need = items_to_get
         self.have = Counter()
         self.action = None
+        self.time_total = 0
 
     def display(self):
         return {
@@ -59,6 +60,7 @@ class Client(Agent):
         pass
 
     def advance(self):
+        self.time_total += 1
         if self.action:
             self.action.step()
         elif not self.using_shelves() and not self.using_exits():

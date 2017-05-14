@@ -20,7 +20,7 @@ class ExitAction:
             self.finalize()
 
     def finalize(self):
-        print("Client checking out at the exit")
+        print("Client checking out at the exit after shopping for: {} turns".format(self.client.time_total))
         self.client.model.schedule.remove(self.client)
         self.client.model.grid.remove_agent(self.client)
         self.client.action = None
