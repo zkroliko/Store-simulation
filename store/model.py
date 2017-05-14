@@ -19,14 +19,8 @@ def compute_gini(model):
 
 class Shop(Model):
     def __init__(self, specification):
-        # Set up the grid and schedule.
 
-        # Use SimultaneousActivation which simulates all the cells
-        # computing their next state simultaneously.  This needs to
-        # be done because each cell's next state depends on the current
-        # state of all its neighbors -- before they've changed.
         self.schedule = SimultaneousActivation(self)
-
         builder = Builder(specification)
         self.height, self.width = builder.dims()
         self.grid = Grid(self.height, self.width, torus=False)

@@ -17,6 +17,9 @@ with open("shop2.json") as file:
                           "Color": "Black"}],
                         data_collector_name='datacollector')
 
-    server = ModularServer(Shop, [canvas_element,chart], "Shop", specification)
+
+    server = ModularServer(Shop, [canvas_element], "Shop", specification)
+    # server = ModularServer(Shop, [canvas_element,chart], "Shop", specification)
+
 
 

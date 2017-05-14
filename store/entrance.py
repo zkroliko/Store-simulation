@@ -6,20 +6,18 @@ import random
 from store import utils
 from store.client import Client
 
-
 class Entrance(Agent):
-    PROBABILITY = 0.03
 
-    COUNT = 10
+    MIN_ITEMS = 1
+    MAX_ITEMS = 10
 
-    MIN_ITEMS = 2
-    MAX_ITEMS = 5
-
-    def __init__(self, pos, model):
+    def __init__(self, pos, model, entry_events):
         super().__init__(pos, model)
         self.x, self.y = pos
         self.pos = pos
-        self.count = self.COUNT
+        self.arrival_events = sorted(entry_events)
+        self.waiting_to_enter = 0
+        self.curr_event_index = 0
 
     def display(self):
         return {
@@ -31,7 +29,7 @@ class Entrance(Agent):
             "x": self.x,
             "y": self.y,
             "Color": "blue",
-            "text": self.count,
+            "text": self.waiting_to_enter,
             "text_color": "white"
         }
 
@@ -47,8 +45,20 @@ class Entrance(Agent):
         return self.model.grid.neighbor_iter((self.x, self.y), True)
 
     def step(self):
-        if self.count > 0 and random.random() < self.PROBABILITY:
-            self.create_client()
+        self.asses_entry_events()
+        self.invite_waiting_clients()
+
+    def asses_entry_events(self):
+        if self.curr_event_index < len(self.arrival_events) and int(self.arrival_events[self.curr_event_index]) < self.model.schedule.time:
+            self.waiting_to_enter += 1
+            self.curr_event_index += 1
+
+    def invite_waiting_clients(self):
+        failed_to_place = False
+        while self.waiting_to_enter > 0 and not failed_to_place:
+            failed_to_place = not self.create_client()
+            if not failed_to_place:
+                self.waiting_to_enter -= 1
 
     def advance(self):
         pass
@@ -60,10 +70,11 @@ class Entrance(Agent):
             cell = Client(pos, self.gen_item_list(), self.model)
             self.model.grid.place_agent(cell, cell.pos)
             self.model.schedule.add(cell)
-            self.count -= 1
             print("Client entered at {}".format(pos))
+            return True
         else:
             print("Entrance blocked at ({},{})".format(self.x, self.y))
+            return False
 
     def _places_to_create(self):
         return utils.places_to_move(self.x, self.y, self.model.width, self.model.height)
