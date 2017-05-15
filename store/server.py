@@ -13,13 +13,17 @@ with open("shop2.json") as file:
 
     canvas_element = CanvasGrid(portrayCell, builder.dims()[0], builder.dims()[1], 500, 500)
 
-    chart = ChartModule([{"Label": "Gini",
+    needChart = ChartModule([{"Label": "TotalNeeded",
                           "Color": "Black"}],
-                        data_collector_name='datacollector')
+                        data_collector_name='needCollector')
+
+    nCustomersChart = ChartModule([{"Label": "NCustomers",
+                          "Color": "Black"}],
+                        data_collector_name='NCustomersCollector')
 
 
-    server = ModularServer(Shop, [canvas_element], "Shop", specification)
-    # server = ModularServer(Shop, [canvas_element,chart], "Shop", specification)
+    # server = ModularServer(Shop, [canvas_element], "Shop", specification)
+    server = ModularServer(Shop, [canvas_element,nCustomersChart], "Shop", specification)
 
 
 

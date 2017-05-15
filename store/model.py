@@ -6,20 +6,22 @@ from mesa.time import SimultaneousActivation
 from store.builder import Builder
 
 
-def compute_gini(model):
-    agent_wealths = [agent.need_count() for agent in model.schedule.agents if hasattr(agent, "need_count")]
-    x = sorted(agent_wealths)
-    N = len(agent_wealths)
+def need_compute(model):
+    needed_items = [agent.need_count() for agent in model.schedule.agents if hasattr(agent, "need_count")]
+    N = len(needed_items)
     if N > 0:
-        B = sum(xi for i, xi in enumerate(x))
+        B = sum(xi for i, xi in enumerate(needed_items))
         return B
     else:
         return 0
 
 
+def n_customers_compute(model):
+    customers = [agent for agent in model.schedule.agents if hasattr(agent, "need_count")]
+    return len(customers)
+
 class Shop(Model):
     def __init__(self, specification):
-
         self.schedule = SimultaneousActivation(self)
         builder = Builder(specification)
         self.height, self.width = builder.dims()
@@ -29,10 +31,17 @@ class Shop(Model):
 
         self.running = True
 
-        self.datacollector = DataCollector(
-            model_reporters={"Gini": compute_gini},
-            agent_reporters={"Need": lambda s: s.need_count() if hasattr(s, "need_count") else 0})
+        self.needCollector = DataCollector(
+            model_reporters={"TotalNeeded": need_compute},
+            agent_reporters={"TotalNeededR": lambda s: s.need_count() if hasattr(s, "need_count") else 0}
+        )
+
+        self.NCustomersCollector = DataCollector(
+            model_reporters={"NCustomers": n_customers_compute},
+            agent_reporters={"NCustomersR": lambda s: 1 if hasattr(s, "need_count") else 0}
+        )
 
     def step(self):
-        self.datacollector.collect(self)
+        self.needCollector.collect(self)
+        self.NCustomersCollector.collect(self)
         self.schedule.step()
