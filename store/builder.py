@@ -26,6 +26,9 @@ class Builder:
     def get_categories(self):
         return self.data["categories"]
 
+    def get_sim_length(self):
+        return self.data["length"]
+
     def get_client_count(self):
         return self.data["client_count"] if "client_count" in self.data else 100
 

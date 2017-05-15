@@ -2,9 +2,10 @@
   "width": 20,
   "height": 20,
   "categories": ["m","n","p","s","c","k","h","b","g"],
-  "client_count": 2000,
+  "length": 8640,
+  "client_count": 200,
   "client_distribution": {
-    "mean": 8640,
+    "mean": 4320,
     "variance": 3500
   },
   "entrances": [

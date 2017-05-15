@@ -22,11 +22,14 @@ def n_customers_compute(model):
 
 class Shop(Model):
     def __init__(self, specification):
+
         self.schedule = SimultaneousActivation(self)
+
         builder = Builder(specification)
         self.height, self.width = builder.dims()
         self.grid = Grid(self.height, self.width, torus=False)
         self.categories = builder.get_categories()
+        self.end_turn = builder.get_sim_length()
         builder.build(self)
 
         self.running = True
@@ -42,6 +45,10 @@ class Shop(Model):
         )
 
     def step(self):
-        self.needCollector.collect(self)
-        self.NCustomersCollector.collect(self)
-        self.schedule.step()
+        if (self.schedule.time < self.end_turn):
+            self.needCollector.collect(self)
+            self.NCustomersCollector.collect(self)
+            self.schedule.step()
+        else:
+            self.running = False
+            print("Simulation stopped after {} turns".format(self.schedule.time))

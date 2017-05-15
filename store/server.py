@@ -22,8 +22,8 @@ with open("shop2.json") as file:
                         data_collector_name='NCustomersCollector')
 
 
-    # server = ModularServer(Shop, [canvas_element], "Shop", specification)
-    server = ModularServer(Shop, [canvas_element,nCustomersChart], "Shop", specification)
+    server = ModularServer(Shop, [canvas_element], "Shop", specification)
+    # server = ModularServer(Shop, [canvas_element,nCustomersChart], "Shop", specification)
 
 
 
