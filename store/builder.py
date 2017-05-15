@@ -1,12 +1,9 @@
-import json
-
-import numpy
-from mesa.space import Grid
-
-from store.entrance import Entrance
-from store.exit import Exit
-from store.shelf import Shelf
 import matplotlib.pyplot as plt
+import numpy
+
+from store.actors.entrance import Entrance
+from store.actors.exit import Exit
+from store.actors.shelf import Shelf
 
 
 class Builder:

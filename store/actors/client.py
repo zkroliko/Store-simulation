@@ -2,10 +2,10 @@ from collections import Counter
 
 from mesa import Agent
 
-from store import utils
-from store.decisionEngine import DecisionEngine
-from store.exitAction import ExitAction
-from store.pickAction import PickAction
+from store.actions.exitAction import ExitAction
+from store.actions.pickAction import PickAction
+from store.drivers.decisionEngine import DecisionEngine
+from store.utils import moveUtils
 
 
 class Client(Agent):
@@ -91,5 +91,5 @@ class Client(Agent):
         return False
 
     def _possible_moves(self):
-        return utils.places_to_move(self.x, self.y, self.model.width, self.model.height)
+        return moveUtils.places_to_move(self.x, self.y, self.model.width, self.model.height)
 

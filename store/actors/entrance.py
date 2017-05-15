@@ -1,13 +1,13 @@
+import random
 from collections import Counter
 
 from mesa import Agent
-import random
 
-from store import utils
-from store.client import Client
+from store.utils import moveUtils
+from store.actors.client import Client
+
 
 class Entrance(Agent):
-
     MIN_ITEMS = 1
     MAX_ITEMS = 10
 
@@ -77,4 +77,4 @@ class Entrance(Agent):
             return False
 
     def _places_to_create(self):
-        return utils.places_to_move(self.x, self.y, self.model.width, self.model.height)
+        return moveUtils.places_to_move(self.x, self.y, self.model.width, self.model.height)

@@ -1,9 +1,10 @@
 import numpy
 
+from store.utils import vectorUtils
+
 
 class PerceptionDriver:
     GENERAL_COEFF = 2.0
-    DIAG_COEFF = 0.709 # For diagonal vector normalization
 
     WEIGHTS_NORMAL = {
         "shelf": 1,
@@ -20,31 +21,33 @@ class PerceptionDriver:
     }
 
     def __init__(self, client):
-        self.x = 0
-        self.y = 0
+        self.w_x = 0
+        self.w_y = 0
         self.client = client
 
     def update(self):
-        self.x = 0
-        self.y = 0
+        # Zeroing the weights
+        self.w_x = 0
+        self.w_y = 0
         for n in self.client.surround:
-            weight = 0
+            impact = 0
             if hasattr(n, "category"):
-                weight = self.assess_shelf(n)
+                impact = self.assess_shelf(n)
             elif hasattr(n, "check_out"):
-                weight = self.assess_exit(n)
-            if hasattr(n, "create_client"):
-                weight = self.assess_entrance(n)
-            if hasattr(n, "done"):
-                weight = self.assess_client(n)
-            if weight != 0:
+                impact = self.assess_exit(n)
+            elif hasattr(n, "create_client"):
+                impact = self.assess_entrance(n)
+            elif hasattr(n, "done"):
+                impact = self.assess_client(n)
+            if impact != 0:
                 vector = self.build_vector_to(n)
                 norm = numpy.linalg.norm(numpy.asanyarray(vector))
                 norm_sq = norm * norm
-                self.x += weight * vector[0] / norm_sq
-                self.y += weight * vector[1] / norm_sq
-        self.x *= self.GENERAL_COEFF
-        self.y *= self.GENERAL_COEFF
+                self.w_x += impact * vector[0] / norm_sq
+                self.w_y += impact * vector[1] / norm_sq
+        # Scaling the weights according to the coefficient
+        self.w_x *= self.GENERAL_COEFF
+        self.w_y *= self.GENERAL_COEFF
 
     def assess_shelf(self, shelf):
         return self.WEIGHTS_NORMAL["shelf"] if shelf.category in self.client.need else self.WEIGHTS_DONE["shelf"]
@@ -59,17 +62,9 @@ class PerceptionDriver:
         return self.WEIGHTS_NORMAL["other_client"]
 
     def weight(self, move):
-        vector = self.debased_vector(move)
-        return max(0, (vector[0] * self.x + vector[1] * self.y) * self.GENERAL_COEFF)
+        vector = vectorUtils.move_to_vec(move)
+        return max(0, (vector[0] * self.w_x + vector[1] * self.w_y) * self.GENERAL_COEFF)
 
     def build_vector_to(self, n):
         return n.x - self.client.x, n.y - self.client.y
 
-    def debased_vector(self, move):
-        # This is all on integers - only on move vectors
-        # Normalizing the move vector
-        vec = move[1][0] - move[0][0], move[1][1] - move[0][1]
-        if vec[0] == vec[1] != 0:
-            return vec[0]*self.DIAG_COEFF, vec[1]*self.DIAG_COEFF
-        else:
-            return vec
