@@ -7,17 +7,9 @@ import matplotlib.patches as mpatches
 
 from store.actors.force_ghost import ForceGhost
 from store.builder import Builder
+from store.stats.active_customers import ActiveCustomersCollector
+from store.stats.need import NeedCollector
 from storeTests.corner_utils import gen_corner_pos
-
-
-def need_compute(model):
-    needed_items = [agent.need_count() for agent in model.schedule.agents if hasattr(agent, "need_count")]
-    N = len(needed_items)
-    if N > 0:
-        B = sum(xi for i, xi in enumerate(needed_items))
-        return B
-    else:
-        return 0
 
 
 def n_customers_compute(model):
@@ -41,20 +33,14 @@ class Shop(Model):
 
         self.running = True
 
-        self.needCollector = DataCollector(
-            model_reporters={"TotalNeeded": need_compute},
-            agent_reporters={"TotalNeededR": lambda s: s.need_count() if hasattr(s, "need_count") else 0}
-        )
-
-        self.NCustomersCollector = DataCollector(
-            model_reporters={"NCustomers": n_customers_compute},
-            agent_reporters={"NCustomersR": lambda s: 1 if hasattr(s, "need_count") else 0}
-        )
+        self.needCollector = NeedCollector
+        self.activeCustomersCollector = ActiveCustomersCollector
+        self.collectors = [self.needCollector,self.activeCustomersCollector]
 
     def step(self):
         if self.schedule.time < self.end_turn:
-            self.needCollector.collect(self)
-            self.NCustomersCollector.collect(self)
+            for collector in self.collectors:
+                collector.collect(self)
             self.schedule.step()
         else:
             self.running = False
@@ -63,7 +49,7 @@ class Shop(Model):
             plt.legend(handles=[mpatches.Patch(color='red', label='Needed items'),
                                 mpatches.Patch(color='orange', label='Active customers')])
             plt.plot(self.needCollector.get_model_vars_dataframe(), color="red")
-            plt.plot(self.NCustomersCollector.get_model_vars_dataframe(), color="orange")
+            plt.plot(self.activeCustomersCollector.get_model_vars_dataframe(), color="orange")
             plt.show()
 
     def build_force_ghosts(self):
