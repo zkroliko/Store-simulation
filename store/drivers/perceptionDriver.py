@@ -8,9 +8,10 @@ class PerceptionDriver:
 
     WEIGHTS_NORMAL = {
         "shelf": 1,
-        "other_client": -0.05,
+        "other_client": -0.15,
         "exit": -1,
-        "entrance": -1
+        "entrance": -1,
+        "ghost": 20
     }
 
     WEIGHTS_DONE = {
@@ -29,6 +30,7 @@ class PerceptionDriver:
         # Zeroing the weights
         self.w_x = 0
         self.w_y = 0
+        # First the grid objects
         for n in self.client.surround:
             impact = 0
             if hasattr(n, "category"):
@@ -45,9 +47,17 @@ class PerceptionDriver:
                 norm_sq = norm * norm
                 self.w_x += impact * vector[0] / norm_sq
                 self.w_y += impact * vector[1] / norm_sq
+        # For non grid objects
+        for g in self.client.model.ghosts:
+            impact = self.assess_ghost(g)
+            vector = self.build_vector_to(g)
+            norm = numpy.linalg.norm(numpy.asanyarray(vector))
+            norm_sq = norm * norm
+            self.w_x += impact * vector[0] / norm_sq
+            self.w_y += impact * vector[1] / norm_sq
+
         # Scaling the weights according to the coefficient
         self.w_x *= self.GENERAL_COEFF
-        self.w_y *= self.GENERAL_COEFF
 
     def assess_shelf(self, shelf):
         return self.WEIGHTS_NORMAL["shelf"] if self.needed_shelf(shelf) else self.WEIGHTS_DONE["shelf"]
@@ -60,6 +70,9 @@ class PerceptionDriver:
 
     def assess_client(self, client):
         return self.WEIGHTS_NORMAL["other_client"]
+
+    def assess_ghost(self, ghost):
+        return self.WEIGHTS_NORMAL["ghost"]*ghost.strength
 
     def needed_shelf(self, shelf):
         return shelf.category in self.client.need and self.client.need[shelf.category] > 0

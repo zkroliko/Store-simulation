@@ -1,11 +1,13 @@
 from mesa import Model
 from mesa.datacollection import DataCollector
-from mesa.space import Grid
+from mesa.space import Grid, MultiGrid
 from mesa.time import SimultaneousActivation
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
+from store.actors.force_ghost import ForceGhost
 from store.builder import Builder
+from storeTests.corner_utils import gen_corner_pos
 
 
 def need_compute(model):
@@ -35,6 +37,7 @@ class Shop(Model):
         self.c_probabilities = builder.get_category_probabilities()
         self.end_turn = builder.get_sim_length()
         builder.build(self)
+        self.ghosts = self.build_force_ghosts()
 
         self.running = True
 
@@ -58,7 +61,15 @@ class Shop(Model):
             print("Simulation stopped after {} turns".format(self.schedule.time))
             plt.title("Needed items and active customers in time")
             plt.legend(handles=[mpatches.Patch(color='red', label='Needed items'),
-                        mpatches.Patch(color='orange', label='Active customers')])
+                                mpatches.Patch(color='orange', label='Active customers')])
             plt.plot(self.needCollector.get_model_vars_dataframe(), color="red")
             plt.plot(self.NCustomersCollector.get_model_vars_dataframe(), color="orange")
             plt.show()
+
+    def build_force_ghosts(self):
+        ghosts = []
+        for pos in gen_corner_pos(self.height, self.width):
+            ghosts.append(ForceGhost(pos, self))
+        return ghosts
+
+
