@@ -7,7 +7,6 @@ from store.actors.shelf import Shelf
 
 
 class Builder:
-    DEBUG = False
 
     def __init__(self, data):
         self.data = data
@@ -40,27 +39,25 @@ class Builder:
             return dist["mean"], dist["variance"]
 
     def get_entrances(self, model, list):
-        dist = self.get_client_distribution()
         c_per_entrance = int(self.get_client_count()/len(list))
-        # Debug for seeing the distributions
-        if (self.DEBUG):
-            plot, subplots = plt.subplots(len(list), sharex=True, sharey=True)
-            subplots[0].set_title("Distribution of entry events for entrances")
-            for i, e in enumerate(list):
-                entry_events = numpy.random.normal(dist[0],dist[1],c_per_entrance)
-                subplots[i].hist(entry_events)
-                entrance = Entrance((e["x"],e["y"]), model, entry_events)
-                model.grid.place_agent(entrance, (e["x"],e["y"]))
-                model.schedule.add(entrance)
-            plot.subplots_adjust(hspace=0)
-            plot.show()
-        # Normal operations
-        else:
-            for e in list:
-                entry_events = numpy.random.normal(dist[0],dist[1],c_per_entrance)
-                entrance = Entrance((e["x"],e["y"]), model, entry_events)
-                model.grid.place_agent(entrance, (e["x"],e["y"]))
-                model.schedule.add(entrance)
+        for e in list:
+            entry_events = self.create_entry_events(c_per_entrance)
+            entrance = Entrance((e["x"],e["y"]), model, entry_events)
+            print("Entrance at {}, {} will have {} clients enter ".format(e["x"],e["y"],len(entry_events)))
+            model.grid.place_agent(entrance, (e["x"],e["y"]))
+            model.schedule.add(entrance)
+
+    def create_entry_events(self,count):
+        dist = self.get_client_distribution()
+        left = count
+        events = []
+        while left > 0:
+            new_event = numpy.random.normal(dist[0],dist[1])
+            if 0 < new_event < self.get_sim_length():
+                events.append(new_event)
+                left -= 1
+        return events
+
 
     def get_exits(self, model, list):
         for e in list:

@@ -1,6 +1,4 @@
-import json
 import unittest
-from time import sleep
 
 import matplotlib.pyplot as plt
 import numpy
