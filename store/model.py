@@ -32,6 +32,7 @@ class Shop(Model):
         self.height, self.width = builder.dims()
         self.grid = Grid(self.height, self.width, torus=False)
         self.categories = builder.get_categories()
+        self.c_probabilities = builder.get_category_probabilities()
         self.end_turn = builder.get_sim_length()
         builder.build(self)
 

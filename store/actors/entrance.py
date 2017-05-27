@@ -5,6 +5,7 @@ from mesa import Agent
 
 from store.utils import moveUtils
 from store.actors.client import Client
+from store.utils.choiceUtils import weighted_choice
 
 
 class Entrance(Agent):
@@ -35,9 +36,10 @@ class Entrance(Agent):
 
     def gen_item_list(self):
         count = random.randrange(self.MIN_ITEMS, self.MAX_ITEMS)
+        w_categories = list(zip(self.model.categories, self.model.c_probabilities))
         items = Counter()
         for i in range(count):
-            items[random.choice(self.model.categories)] += 1
+            items[weighted_choice(w_categories)] += 1
         return items
 
     @property

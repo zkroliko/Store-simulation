@@ -23,6 +23,9 @@ class Builder:
     def get_categories(self):
         return self.data["categories"]
 
+    def get_category_probabilities(self):
+        return self.data["c_probabilities"]
+
     def get_sim_length(self):
         return self.data["length"]
 
