@@ -62,7 +62,7 @@ class PerceptionDriver:
         return self.WEIGHTS_NORMAL["other_client"]
 
     def needed_shelf(self, shelf):
-        return self.client.need and self.client.need[shelf.category] > 0
+        return shelf.category in self.client.need and self.client.need[shelf.category] > 0
 
     def weight(self, move):
         vector = vectorUtils.move_to_vec(move)
