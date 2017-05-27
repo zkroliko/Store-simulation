@@ -50,7 +50,7 @@ class PerceptionDriver:
         self.w_y *= self.GENERAL_COEFF
 
     def assess_shelf(self, shelf):
-        return self.WEIGHTS_NORMAL["shelf"] if shelf.category in self.client.need else self.WEIGHTS_DONE["shelf"]
+        return self.WEIGHTS_NORMAL["shelf"] if self.needed_shelf(shelf) else self.WEIGHTS_DONE["shelf"]
 
     def assess_exit(self, exit):
         return self.WEIGHTS_DONE["exit"] if self.client.done() else self.WEIGHTS_NORMAL["exit"]
@@ -60,6 +60,9 @@ class PerceptionDriver:
 
     def assess_client(self, client):
         return self.WEIGHTS_NORMAL["other_client"]
+
+    def needed_shelf(self, shelf):
+        return self.client.need and self.client.need[shelf.category] > 0
 
     def weight(self, move):
         vector = vectorUtils.move_to_vec(move)
