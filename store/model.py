@@ -9,6 +9,7 @@ from store.actors.force_ghost import ForceGhost
 from store.builder import Builder
 from store.stats.active_customers import ActiveCustomersCollector
 from store.stats.need import NeedCollector
+from store.stats.total_time import TotalTimeCollector
 from storeTests.corner_utils import gen_corner_pos
 
 
@@ -33,9 +34,14 @@ class Shop(Model):
 
         self.running = True
 
+        # This is for the by step collectors
         self.needCollector = NeedCollector
         self.activeCustomersCollector = ActiveCustomersCollector
         self.collectors = [self.needCollector,self.activeCustomersCollector]
+
+        # This is for end of simulation collectors
+        self.total_time_collector = TotalTimeCollector()
+
 
     def step(self):
         if self.schedule.time < self.end_turn:
@@ -44,6 +50,8 @@ class Shop(Model):
             self.schedule.step()
         else:
             self.running = False
+            self.total_time_collector.report()
+            self.total_time_collector.plot()
             print("Simulation stopped after {} turns".format(self.schedule.time))
             plt.title("Needed items and active customers in time")
             plt.legend(handles=[mpatches.Patch(color='red', label='Needed items'),
