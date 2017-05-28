@@ -84,7 +84,7 @@ class Client(Agent):
         if self.done() and not self.action:
             for n in self.neighbors:
                 if hasattr(n, "check_out"):
-                    self.action = CheckOutAction(self, n)
+                    self.action = CheckOutAction(self)
                     return True
         return False
 
