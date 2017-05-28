@@ -9,7 +9,6 @@ from store.utils import moveUtils
 
 
 class Client(Agent):
-
     def __init__(self, pos, items_to_get, model):
         super().__init__(pos, model)
         self.mind = DecisionEngine(self)
@@ -92,8 +91,7 @@ class Client(Agent):
     def remove(self):
         self.model.schedule.remove(self)
         self.model.grid.remove_agent(self)
-        self.model.total_time_collector.commit_total_time(self.time_total)
+        self.model.total_time_collector.commit_time(self.time_total, self.past_actions)
 
     def _possible_moves(self):
         return moveUtils.places_to_move(self.x, self.y, self.model.width, self.model.height)
-

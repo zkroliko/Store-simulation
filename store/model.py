@@ -9,7 +9,7 @@ from store.actors.force_ghost import ForceGhost
 from store.builder import Builder
 from store.stats.active_customers import ActiveCustomersCollector
 from store.stats.need import NeedCollector
-from store.stats.total_time import TotalTimeCollector
+from store.stats.time_collector import TimeCollector
 from storeTests.corner_utils import gen_corner_pos
 
 
@@ -40,7 +40,7 @@ class Shop(Model):
         self.collectors = [self.needCollector,self.activeCustomersCollector]
 
         # This is for end of simulation collectors
-        self.total_time_collector = TotalTimeCollector()
+        self.total_time_collector = TimeCollector()
 
 
     def step(self):
