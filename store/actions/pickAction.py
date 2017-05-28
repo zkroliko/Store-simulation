@@ -2,8 +2,8 @@ import random
 
 
 class PickAction:
-    MIN_LENGTH = 2
-    MAX_LENGTH = 8
+    MIN_LENGTH = 1
+    MAX_LENGTH = 10
 
     def __init__(self, client, shelf):
         self.client = client

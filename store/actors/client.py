@@ -2,15 +2,13 @@ from collections import Counter
 
 from mesa import Agent
 
-from store.actions.exitAction import ExitAction
+from store.actions.checkOutAction import CheckOutAction
 from store.actions.pickAction import PickAction
 from store.drivers.decisionEngine import DecisionEngine
 from store.utils import moveUtils
 
 
 class Client(Agent):
-    MIN_PICK_LENGTH = 2
-    MAX_PICK_LENGTH = 8
 
     def __init__(self, pos, items_to_get, model):
         super().__init__(pos, model)
@@ -86,7 +84,7 @@ class Client(Agent):
         if self.done() and not self.action:
             for n in self.neighbors:
                 if hasattr(n, "check_out"):
-                    self.action = ExitAction(self, n)
+                    self.action = CheckOutAction(self, n)
                     return True
         return False
 
