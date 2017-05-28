@@ -28,4 +28,6 @@ class PickAction:
         print("Client picked up an item of category {}".format(self.item))
         self.client.need[self.item] -= 1
         self.client.have[self.item] += 1
+        self.client.past_actions.append(self)
         self.client.action = None
+

@@ -34,8 +34,6 @@ class CheckOutAction:
 
     def finalize(self):
         print("Client checking out at the exit after shopping for: {} turns".format(self.client.time_total))
-        model = self.client.model
-        model.schedule.remove(self.client)
-        model.grid.remove_agent(self.client)
-        model.total_time_collector.commit_total_time(self.client.time_total)
+        self.client.past_actions.append(self)
         self.client.action = None
+        self.client.remove()

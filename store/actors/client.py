@@ -18,6 +18,7 @@ class Client(Agent):
         self.need = items_to_get
         self.have = Counter()
         self.action = None
+        self.past_actions = []
         self.time_total = 0
 
     def display(self):
@@ -87,6 +88,11 @@ class Client(Agent):
                     self.action = CheckOutAction(self)
                     return True
         return False
+
+    def remove(self):
+        self.model.schedule.remove(self)
+        self.model.grid.remove_agent(self)
+        self.model.total_time_collector.commit_total_time(self.time_total)
 
     def _possible_moves(self):
         return moveUtils.places_to_move(self.x, self.y, self.model.width, self.model.height)

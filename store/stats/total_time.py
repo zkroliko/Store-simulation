@@ -10,9 +10,18 @@ import time
 class TotalTimeCollector:
     def __init__(self):
         self.times = []
+        self.actions = {}
 
     def commit_total_time(self, time):
         self.times.append(time)
+
+    def commit_actions(self, actions):
+        for a in actions:
+            action_type = type(a)
+            if action_type in self.actions:
+                self.actions[action_type] += a.length
+            else:
+                self.actions[action_type] = a.length
 
     def finalize(self):
         self.print_report()
