@@ -4,10 +4,10 @@
   "categories": ["m","n","p","s","c","k","h","b","g","a","d","f"],
   "c_probabilities": [1,1,1,1,1,1,1,1,1,1,1,1],
   "length": 10800,
-  "client_count": 300,
+  "client_count": 500,
   "client_distribution": {
     "mean": 5400,
-    "variance": 4500
+    "variance": 3000
   },
   "entrances": [
     {"x": 1, "y": 19, "speed": 1},

@@ -8,12 +8,12 @@ from store.builder import Builder
 
 class TestPlacesToBe(unittest.TestCase):
     input_json = {
-        "length": 8640,
-        "client_count": 300,
-        "client_distribution": {
-            "mean": 4320,
-            "variance": 2500
-        }
+          "length": 10800,
+          "client_count": 500,
+          "client_distribution": {
+            "mean": 5400,
+            "variance": 3000
+          }
     }
 
     def test_graph(self):
