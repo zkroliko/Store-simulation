@@ -32,7 +32,7 @@ class TestPlacesToBe(unittest.TestCase):
             x_labels = builder.get_categories()
 
             fig, ax = plt.subplots()
-            plt.title("Probabilites of occurance of items for categories")
+            plt.title("Probabilities of occurrence of items for categories")
 
             plt.bar(index, values, width=bar_width)
             plt.xlabel('Categories')
