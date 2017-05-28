@@ -50,8 +50,9 @@ class Shop(Model):
             self.schedule.step()
         else:
             self.running = False
-            self.total_time_collector.report()
-            self.total_time_collector.plot()
+            # Will do everything it can
+            self.total_time_collector.finalize()
+            #
             print("Simulation stopped after {} turns".format(self.schedule.time))
             plt.title("Needed items and active customers in time")
             plt.legend(handles=[mpatches.Patch(color='red', label='Needed items'),
