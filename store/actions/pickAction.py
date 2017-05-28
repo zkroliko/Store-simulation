@@ -8,8 +8,12 @@ class PickAction:
     def __init__(self, client, shelf):
         self.client = client
         self.item = shelf.category
-        self.time_left = random.randrange(self.MIN_LENGTH, self.MAX_LENGTH)
+        self.length = self.gen_time()
+        self.time_left = self.length
         print("Client started picking an item of category {}".format(shelf.category))
+
+    def gen_time(self):
+        return random.randrange(self.MIN_LENGTH, self.MAX_LENGTH)
 
     def ongoing(self):
         return self.time_left > 0

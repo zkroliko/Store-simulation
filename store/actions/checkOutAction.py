@@ -12,7 +12,8 @@ class CheckOutAction:
 
     def __init__(self, client):
         self.client = client
-        self.time_left = self.gen_time()
+        self.length = self.gen_time()
+        self.time_left = self.length
         print("Client started checking out")
 
     def gen_time(self):
