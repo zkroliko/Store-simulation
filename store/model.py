@@ -1,9 +1,7 @@
-from mesa import Model
-from mesa.datacollection import DataCollector
-from mesa.space import Grid, MultiGrid
-from mesa.time import SimultaneousActivation
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
+from mesa import Model
+from mesa.space import Grid
+from mesa.time import SimultaneousActivation
 
 from store.actors.force_ghost import ForceGhost
 from store.builder import Builder
@@ -35,8 +33,8 @@ class Shop(Model):
         self.running = True
 
         # This is for the by step collectors
-        self.needCollector = NeedCollector
-        self.activeCustomersCollector = ActiveCustomersCollector
+        self.needCollector = NeedCollector()
+        self.activeCustomersCollector = ActiveCustomersCollector()
         self.collectors = [self.needCollector,self.activeCustomersCollector]
 
         # This is for end of simulation collectors
@@ -50,15 +48,10 @@ class Shop(Model):
             self.schedule.step()
         else:
             self.running = False
-            # Will do everything it can
+            # For data aquisition
             self.total_time_collector.finalize()
-            #
-            print("Simulation stopped after {} turns".format(self.schedule.time))
-            plt.title("Needed items and active customers in time")
-            plt.legend(handles=[mpatches.Patch(color='red', label='Needed items'),
-                                mpatches.Patch(color='orange', label='Active customers')])
-            plt.plot(self.needCollector.get_model_vars_dataframe(), color="red")
-            plt.plot(self.activeCustomersCollector.get_model_vars_dataframe(), color="orange")
+            self.needCollector.finalize()
+            self.activeCustomersCollector.finalize()
             plt.show()
 
     def build_force_ghosts(self):

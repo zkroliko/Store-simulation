@@ -32,17 +32,19 @@ class TimeCollector:
 
     def plot(self):
         self._plot_together()
-        self._plot_single(self.total_times, "Total turns spent by actors in the simulation", 'Turns spent in the shop',
-                        'Count')
-        self._plot_single(self.active_times, "Turns spent by actors active in the simulation", 'Turns spent active',
-                        'Count')
+        self._plot_single(self.total_times, "Total turns spent in the simulation",
+                          'Total turns spent in simulation',
+                          'Count')
+        self._plot_single(self.active_times, "Turns spent active in the simulation",
+                          'Turns spent active in simulation',
+                          'Count')
 
     def _plot_together(self):
         n_bins = 30
         fig, axes = plt.subplots(nrows=3, ncols=1)
         ax0, ax1, ax2 = axes.flatten()
 
-        x = (self.total_times,self.active_times)
+        x = (self.total_times, self.active_times)
 
         colors = ['red', 'tan']
         labels = ['total', 'active']
@@ -86,7 +88,7 @@ class TimeCollector:
     def save_report(self):
         if not os.path.exists("results"):
             os.makedirs("results")
-        with open(os.path.join('results', 'time_report_{}.csv'.format(str(time.time()))), 'w') as file:
+        with open(os.path.join('results', 'time_report_{}.txt'.format(str(time.time()))), 'w') as file:
             file.write(self.report())
 
     def save_data(self):
@@ -95,4 +97,4 @@ class TimeCollector:
         with open(os.path.join('results', 'time_data_{}.csv'.format(str(time.time()))), 'w') as file:
             file.write("time_total, time_walking")
             for row in self.times:
-                file.write("{}, {}\n".format(str(row[0]),str(row[1])))
+                file.write("{}, {}\n".format(str(row[0]), str(row[1])))
