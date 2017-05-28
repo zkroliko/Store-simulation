@@ -10,7 +10,7 @@ class CheckOutAction:
     MIN_LENGTH_PER_ITEM = 0.25
     MAX_LENGTH_PER_ITEM = 5
 
-    def __init__(self, client, exit):
+    def __init__(self, client):
         self.client = client
         self.time_left = self.gen_time()
         print("Client started checking out")
