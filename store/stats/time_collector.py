@@ -95,6 +95,6 @@ class TimeCollector:
         if not os.path.exists("results"):
             os.makedirs("results")
         with open(os.path.join('results', 'time_data_{}.csv'.format(str(time.time()))), 'w') as file:
-            file.write("time_total, time_walking")
+            file.write("time_total, time_walking\n")
             for row in self.times:
                 file.write("{}, {}\n".format(str(row[0]), str(row[1])))
