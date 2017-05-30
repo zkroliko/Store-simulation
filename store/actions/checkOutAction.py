@@ -20,7 +20,6 @@ class CheckOutAction:
         time_const = random.randrange(self.CONST_MIN_LENGTH, self.CONST_MAX_LENGTH)
         items_count = sum(self.client.have.values())
         time_items = sum(numpy.random.uniform(self.MIN_LENGTH_PER_ITEM, self.MAX_LENGTH_PER_ITEM, items_count))
-        print(time_const+int(time_items))
         return time_const+int(time_items)
 
     def ongoing(self):
