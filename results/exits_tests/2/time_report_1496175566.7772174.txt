@@ -1,0 +1,8 @@
+---TIME REPORT FOR CUSTOMERS---
+Average turns in shop: 657.7777777777778
+Median turns in shop: 462.0
+Standard deviation for turns in shop: 614.6983748403972
+WALKING TIME:
+Average turns walking in shop: 602.2464646464647
+Median turns walking in shop: 403.0
+Standard deviation for turns walking in shop: 612.5202613532955

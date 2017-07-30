@@ -1,0 +1,4 @@
+---ACTIVE CUSTOMERS REPORT---
+Average active customers: 11.595185185185185
+Median active customers: 11.0
+Standard deviation of active customers: 7.051964197284366
